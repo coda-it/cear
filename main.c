@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <signal.h>
 
 #define CONFIG_FILE "./cear.conf"
 #define SERVER_PORT 4000
@@ -130,21 +131,19 @@ int main(int argc, char const *argv[]) {
     }
 
     char* command = concat(concat(concat(shapiEnv, " "), concat(shpanelEnv, " ")), cnf);
-    //char* command = concat(concat(shapiEnv, " "), concat(shpanelEnv, " "));
-    printf("\nCMD\n%s\n\n", command);
 
     free(shapiEnv);
     free(shpanelEnv);
     free(command);
 
     printf("executing scripts\n");
-    //system(cnf);
+    system(cnf);
 
     send(clientFd, reply, strlen(reply), 0);
     close(clientFd);
   }
 
-  printf("closing proxy\n");
+  printf("closing cear\n");
 
   return 0;
 }
