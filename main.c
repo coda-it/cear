@@ -111,8 +111,10 @@ int main(int argc, char const *argv[]) {
     char* shapiEnv = 0;
     if (shapiV != NULL) {
       char* str = concat("SHAPI_V=", shapiV);
+      printf("received parameter %s\n", shapiV);
       shapiEnv = malloc(strlen(str) + 1);
       strcpy(shapiEnv, str);
+      printf("adding env %s\n", shapiEnv);
       free(str);
     }
 
@@ -123,8 +125,10 @@ int main(int argc, char const *argv[]) {
 
     if (shpanelV != NULL) {
       char* str = concat("SHPANEL_V=", shpanelV);
+      printf("received parameter %s\n", shapiV);      
       shpanelEnv = malloc(strlen(str) + 1);
       strcpy(shpanelEnv, str);
+      printf("adding env %s\n", shpanelEnv);
       free(str);
     }
 
