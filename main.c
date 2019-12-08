@@ -127,7 +127,7 @@ int main(int argc, char const *argv[]) {
     if (shpanelV != NULL) {
       char* str = concat("SHPANEL_V=", shpanelV);
       printf("received parameter %s\n", shpanelV);      
-      shpanelEnv = malloc(strlen(str) + 1);
+      shpanelEnv = malloc(strlen(str));
       strcpy(shpanelEnv, str);
       printf("adding env %s\n", shpanelEnv);
       free(str);
@@ -137,8 +137,12 @@ int main(int argc, char const *argv[]) {
     printf("executing command %s\n", command);
     system(command);
 
-    free(shapiEnv);
-    free(shpanelEnv);
+    if (shapiV != NULL) {
+      free(shapiEnv);
+    }
+    if (shpanelV != NULL) {
+      free(shpanelEnv);
+    }
     free(command);
 
     send(clientFd, reply, strlen(reply), 0);
