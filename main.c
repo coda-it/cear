@@ -1,14 +1,14 @@
-#include "version.h"
 #include "utils.h"
+#include "version.h"
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <signal.h>
 
 #define CONFIG_FILE "./cear.conf"
 #define SERVER_PORT 4000
@@ -33,13 +33,12 @@ int main(int argc, char const *argv[]) {
   int n;
   char c;
   char *str;
- 
-  char *reply = 
-  "HTTP/1.1 200 OK\n"
-  "Content-Type: text/html\n"
-  "Content-Length: 8\n"
-  "\n"
-  "executed";
+
+  char *reply = "HTTP/1.1 200 OK\n"
+                "Content-Type: text/html\n"
+                "Content-Length: 8\n"
+                "\n"
+                "executed";
 
   fseek(cnfPtr, 0L, SEEK_END);
   long cnfSize = ftell(cnfPtr);
@@ -100,49 +99,27 @@ int main(int argc, char const *argv[]) {
 
     char request[MAX_REQUEST_SIZE];
     while ((n = read(clientFd, request, MAX_REQUEST_SIZE)) > 0) {
+      // printf("%s", request);
       if (n < MAX_REQUEST_SIZE) {
         break;
       }
     }
 
-    char shapiR[strlen(request)];
-    strcpy(shapiR, request);
-    char* shapiV = getPOSTVal(shapiR, "SHAPI_V");
-    char* shapiEnv = "";
+    char *body;
+    body = strtok(request, "\n");
 
-    if (shapiV != NULL) {
-      char* str = concat("SHAPI_V=", shapiV);
-      printf("received parameter %s\n", shapiV);
-      shapiEnv = malloc(strlen(str) + 1);
-      strcpy(shapiEnv, str);
-      printf("adding env %s\n", shapiEnv);
-      free(str);
+    while (body != NULL) {
+      body = strtok(NULL, "\n");
+      if (body[0] == 13) {
+        body = strtok(NULL, "\n");
+        break;
+      }
     }
 
-    char shpanelR[strlen(request)];
-    strcpy(shpanelR, request);
-    char* shpanelV = getPOSTVal(request, "SHPANEL_V");
-    char* shpanelEnv = "";
-
-    if (shpanelV != NULL) {
-      char* str = concat("SHPANEL_V=", shpanelV);
-      printf("received parameter %s\n", shpanelV);      
-      shpanelEnv = malloc(strlen(str));
-      strcpy(shpanelEnv, str);
-      printf("adding env %s\n", shpanelEnv);
-      free(str);
-    }
-
-    char* command = concat(concat(concat(shapiEnv, " "), concat(shpanelEnv, " ")), cnf);
+    char *command = concat(concat(body, " "), cnf);
     printf("executing command %s\n", command);
     system(command);
 
-    if (shapiV != NULL) {
-      free(shapiEnv);
-    }
-    if (shpanelV != NULL) {
-      free(shpanelEnv);
-    }
     free(command);
 
     send(clientFd, reply, strlen(reply), 0);
