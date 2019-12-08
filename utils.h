@@ -9,7 +9,6 @@ char* getPOSTVal(char* request, char* key) {
     while(val != NULL)
     {
         if(strcmp(val, key) == 0) {
-            printf("%s", val);
             return strtok(NULL, ":=\n");
         }
         val = strtok(NULL, ":=\n");

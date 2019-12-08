@@ -112,7 +112,6 @@ int main(int argc, char const *argv[]) {
     if (shapiV != NULL) {
       char* str = concat("SHAPI_V=", shapiV);
       shapiEnv = malloc(strlen(str) + 1);
-      printf("B = %s\n", str);
       strcpy(shapiEnv, str);
       free(str);
     }
@@ -125,7 +124,6 @@ int main(int argc, char const *argv[]) {
     if (shpanelV != NULL) {
       char* str = concat("SHPANEL_V=", shpanelV);
       shpanelEnv = malloc(strlen(str) + 1);
-      printf("C = %s\n", str);
       strcpy(shpanelEnv, str);
       free(str);
     }
@@ -136,7 +134,7 @@ int main(int argc, char const *argv[]) {
     free(shpanelEnv);
     free(command);
 
-    printf("executing scripts\n");
+    printf("executing command %s\n", cnf);
     system(cnf);
 
     send(clientFd, reply, strlen(reply), 0);
