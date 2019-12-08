@@ -125,7 +125,7 @@ int main(int argc, char const *argv[]) {
 
     if (shpanelV != NULL) {
       char* str = concat("SHPANEL_V=", shpanelV);
-      printf("received parameter %s\n", shapiV);      
+      printf("received parameter %s\n", shpanelV);      
       shpanelEnv = malloc(strlen(str) + 1);
       strcpy(shpanelEnv, str);
       printf("adding env %s\n", shpanelEnv);
