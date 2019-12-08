@@ -129,13 +129,12 @@ int main(int argc, char const *argv[]) {
     }
 
     char* command = concat(concat(concat(shapiEnv, " "), concat(shpanelEnv, " ")), cnf);
+    printf("executing command %s\n", command);
+    system(command);
 
     free(shapiEnv);
     free(shpanelEnv);
     free(command);
-
-    printf("executing command %s\n", cnf);
-    system(cnf);
 
     send(clientFd, reply, strlen(reply), 0);
     close(clientFd);
