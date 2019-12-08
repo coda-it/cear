@@ -108,12 +108,12 @@ int main(int argc, char const *argv[]) {
     char shapiR[strlen(request)];
     strcpy(shapiR, request);
     char* shapiV = getPOSTVal(shapiR, "SHAPI_V");
-    char* shapiEnv = 0;
+    char* shapiEnv = "";
+
     if (shapiV != NULL) {
       char* str = concat("SHAPI_V=", shapiV);
       printf("received parameter %s\n", shapiV);
       shapiEnv = malloc(strlen(str) + 1);
-      memset(shapiEnv, '\0', sizeof *shapiEnv * (strlen(str) + 1));
       strcpy(shapiEnv, str);
       printf("adding env %s\n", shapiEnv);
       free(str);
@@ -122,13 +122,12 @@ int main(int argc, char const *argv[]) {
     char shpanelR[strlen(request)];
     strcpy(shpanelR, request);
     char* shpanelV = getPOSTVal(request, "SHPANEL_V");
-    char* shpanelEnv = 0;
+    char* shpanelEnv = "";
 
     if (shpanelV != NULL) {
       char* str = concat("SHPANEL_V=", shpanelV);
       printf("received parameter %s\n", shpanelV);      
       shpanelEnv = malloc(strlen(str) + 1);
-      memset(shpanelEnv, '\0', sizeof *shpanelEnv * (strlen(str) + 1));
       strcpy(shpanelEnv, str);
       printf("adding env %s\n", shpanelEnv);
       free(str);
