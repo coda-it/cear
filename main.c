@@ -36,16 +36,16 @@ int main(int argc, char const *argv[]) {
   int isAuthenticated = 0;
 
   char *okReply = "HTTP/1.1 200 OK\n"
-                "Content-Type: text/html\n"
-                "Content-Length: 8\n"
-                "\n"
-                "executed";
+                  "Content-Type: text/html\n"
+                  "Content-Length: 8\n"
+                  "\n"
+                  "executed";
 
   char *errReply = "HTTP/1.1 200 OK\n"
-                "Content-Type: text/html\n"
-                "Content-Length: 7\n"
-                "\n"
-                "no auth";                
+                   "Content-Type: text/html\n"
+                   "Content-Length: 7\n"
+                   "\n"
+                   "no auth";
 
   fseek(cnfPtr, 0L, SEEK_END);
   long cnfSize = ftell(cnfPtr);
@@ -118,8 +118,7 @@ int main(int argc, char const *argv[]) {
       if (body[0] == 13) {
         body = strtok(NULL, ":\n");
         break;
-      } 
-      else if (strcmp("X-Cear-Auth", body) == 0) {
+      } else if (strcmp("X-Cear-Auth", body) == 0) {
         body = strtok(NULL, ":\n\r");
         if (strcmp(body, getenv("CEAR_KEY")) == 0) {
           isAuthenticated = 1;
@@ -131,7 +130,7 @@ int main(int argc, char const *argv[]) {
       send(clientFd, errReply, strlen(errReply), 0);
       continue;
     }
-    isAuthenticated=0;
+    isAuthenticated = 0;
 
     char *command = concat(concat(body, " "), cnf);
     printf("executing command %s\n", command);
