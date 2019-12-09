@@ -2,21 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char* getPOSTVal(char* request, char* key) {
-    char* val;
-    val = strtok(request, ":=\n");
-
-    while(val != NULL)
-    {
-        if(strcmp(val, key) == 0) {
-            return strtok(NULL, ":=\n");
-        }
-        val = strtok(NULL, ":=\n");
-    }
-
-    return NULL;
-}
-
 char* concat(char* str1, char* str2) {
     if (str1 == NULL) {
         char *str = malloc(strlen(str2) + 1);
