@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
   cnfPtr = fopen(CONFIG_FILE, "r");
 
   if (cnfPtr == NULL) {
-    perror("cear.db is not defined");
+    perror("cear.conf is not defined");
     exit(EXIT_FAILURE);
   }
 
@@ -33,12 +33,19 @@ int main(int argc, char const *argv[]) {
   int n;
   char c;
   char *str;
+  int isAuthenticated = 0;
 
-  char *reply = "HTTP/1.1 200 OK\n"
-                "Content-Type: text/html\n"
-                "Content-Length: 8\n"
-                "\n"
-                "executed";
+  char *okReply = "HTTP/1.1 200 OK\n"
+                  "Content-Type: text/html\n"
+                  "Content-Length: 8\n"
+                  "\n"
+                  "executed";
+
+  char *errReply = "HTTP/1.1 200 OK\n"
+                   "Content-Type: text/html\n"
+                   "Content-Length: 7\n"
+                   "\n"
+                   "no auth";
 
   fseek(cnfPtr, 0L, SEEK_END);
   long cnfSize = ftell(cnfPtr);
@@ -99,22 +106,31 @@ int main(int argc, char const *argv[]) {
 
     char request[MAX_REQUEST_SIZE];
     while ((n = read(clientFd, request, MAX_REQUEST_SIZE)) > 0) {
-      // printf("%s", request);
       if (n < MAX_REQUEST_SIZE) {
         break;
       }
     }
 
     char *body;
-    body = strtok(request, "\n");
-
+    body = strtok(request, ":\n");
     while (body != NULL) {
-      body = strtok(NULL, "\n");
+      body = strtok(NULL, ":\n");
       if (body[0] == 13) {
-        body = strtok(NULL, "\n");
+        body = strtok(NULL, ":\n");
         break;
+      } else if (strcmp("X-Cear-Auth", body) == 0) {
+        body = strtok(NULL, ":\n\r");
+        if (strcmp(body, getenv("CEAR_KEY")) == 0) {
+          isAuthenticated = 1;
+        }
       }
     }
+
+    if (isAuthenticated == 0) {
+      send(clientFd, errReply, strlen(errReply), 0);
+      continue;
+    }
+    isAuthenticated = 0;
 
     char *command = concat(concat(body, " "), cnf);
     printf("executing command %s\n", command);
@@ -122,7 +138,7 @@ int main(int argc, char const *argv[]) {
 
     free(command);
 
-    send(clientFd, reply, strlen(reply), 0);
+    send(clientFd, okReply, strlen(okReply), 0);
     close(clientFd);
   }
 
