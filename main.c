@@ -112,6 +112,7 @@ int main(int argc, char const *argv[]) {
     }
 
     char *body;
+    char *params;
     char seps[] = " :\n\r";
     body = strtok(request, seps);
 
@@ -125,6 +126,8 @@ int main(int argc, char const *argv[]) {
         if (strcmp(body, getenv("CEAR_KEY")) == 0) {
           isAuthenticated = 1;
         }
+      } else if (strcmp("X-Cear-Args", body) == 0) {
+        params = strtok(NULL, seps);
       }
     }
 
@@ -134,7 +137,7 @@ int main(int argc, char const *argv[]) {
     }
     isAuthenticated = 0;
 
-    char *command = concat(concat(body, " "), cnf);
+    char *command = concat(concat(params, " "), cnf);
     printf("executing command %s\n", command);
     system(command);
 
