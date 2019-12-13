@@ -112,14 +112,16 @@ int main(int argc, char const *argv[]) {
     }
 
     char *body;
-    body = strtok(request, ":\n");
-    while (body != NULL) {
-      body = strtok(NULL, ":\n");
-      if (body[0] == 13) {
-        body = strtok(NULL, ":\n");
+    char seps[] = " :\n\r";
+    body = strtok(request, seps);
+
+    while (1) {
+      body = strtok(NULL, seps);
+
+      if (body == NULL) {
         break;
       } else if (strcmp("X-Cear-Auth", body) == 0) {
-        body = strtok(NULL, ":\n\r");
+        body = strtok(NULL, seps);
         if (strcmp(body, getenv("CEAR_KEY")) == 0) {
           isAuthenticated = 1;
         }
